@@ -14,9 +14,9 @@ switch_update_interrupt_sense()
   char p2val = P2IN;
 
   /* update switch interrupt to detect changes from current buttons */
-  /*  
+    
   P2IES |= (p2val & SWITCHES);	/* if switch up, sense down */
-  /*  P2IES &= (p2val | ~SWITCHES);	/* if switch down, sense up */
+  P2IES &= (p2val | ~SWITCHES);	/* if switch down, sense up */
 
   return p2val;
 }
@@ -38,8 +38,13 @@ switch_interrupt_handler()
 
   
 
+
+
   char p2val = switch_update_interrupt_sense();
 
+  switch_state_down = (p2val & SW1 ) ? 0 : do_button1(p2val);
+  switch_state_down = (p2val & SW2 == 2) ? 0 : do_button2(p2val);
+  /*
   if(SW1){ 
     do_button1(p2val);
   } else if(SW2){
@@ -53,7 +58,7 @@ switch_interrupt_handler()
   led_update();
   */
 }
-void
+char 
 do_button1(char p2val)
 {
   switch_state_down = (p2val & SW1) ? 0 : 1;
@@ -61,12 +66,13 @@ do_button1(char p2val)
   color ^=1;
   
   led_update();
+  return 1;
 }
-void
+char
 do_button2(char p2val)
 {
   enableWDTInterrupts();
-  
+  return 1;
 }
 void
 do_button3(char p2val)
