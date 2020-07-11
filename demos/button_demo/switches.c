@@ -3,6 +3,7 @@
 #include "led.h"
 #include "buzzer.h"
 #include "libTimer.h"
+#include "stateMachines.h"
 
 char switch_state_down, switch_state_changed; /* effectively boolean */
 
@@ -43,7 +44,7 @@ switch_interrupt_handler()
   char p2val = switch_update_interrupt_sense();
 
   switch_state_down = (p2val & SW1 ) ? 0 : do_button1(p2val);
-  switch_state_down = (p2val & SW2 == 2) ? 0 : do_button2(p2val);
+  switch_state_down = (p2val & SW2 ) ? 0 : do_button2(p2val);
   /*
   if(SW1){ 
     do_button1(p2val);
@@ -71,7 +72,9 @@ do_button1(char p2val)
 char
 do_button2(char p2val)
 {
-  enableWDTInterrupts();
+  power ^=1;
+    enableWDTInterrupts();
+  
   return 1;
 }
 void

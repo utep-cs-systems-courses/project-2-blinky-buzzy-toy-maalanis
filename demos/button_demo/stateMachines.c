@@ -2,6 +2,8 @@
 #include "stateMachines.h"
 #include "buzzer.h"
 
+extern char power = 1;
+
 char toggle_red()		/* always toggle! */
 {
   static char sound = 0;
@@ -61,14 +63,23 @@ char toggle_green()	/* only toggle green if red is on!  */
   }
   return changed;
  */
+  buzzer_set_period(0);
   return 1;
 }
 
 
 void state_advance()		/* alternate between toggling red & green */
 {
+
+  if(power) {
+    toggle_red();
+   
+  } else {
+    toggle_green();
+    
+  }
   
-  toggle_red();
+
   
   
 }
