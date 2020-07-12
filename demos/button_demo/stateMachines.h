@@ -4,5 +4,6 @@
 extern char power;
 
 void state_advance();
+void state_advance_flip();
 
 #endif // included

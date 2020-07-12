@@ -5,7 +5,9 @@
 #include "libTimer.h"
 #include "stateMachines.h"
 
+
 char switch_state_down, switch_state_changed; /* effectively boolean */
+char blink_mode = 0;
 
 char color=0;
 
@@ -45,6 +47,7 @@ switch_interrupt_handler()
 
   switch_state_down = (p2val & SW1 ) ? 0 : do_button1(p2val);
   switch_state_down = (p2val & SW2 ) ? 0 : do_button2(p2val);
+  switch_state_down = (p2val & SW3 ) ? 0 : do_button3(p2val);
   /*
   if(SW1){ 
     do_button1(p2val);
@@ -64,8 +67,7 @@ do_button1(char p2val)
 {
   switch_state_down = (p2val & SW1) ? 0 : 1;
   switch_state_changed = 1;
-  color ^=1;
-  
+  color ^=1;  
   led_update();
   return 1;
 }
@@ -73,14 +75,18 @@ char
 do_button2(char p2val)
 {
   power ^=1;
-    enableWDTInterrupts();
+  blink_mode = 0;
+  enableWDTInterrupts();
   
   return 1;
 }
-void
+char
 do_button3(char p2val)
 {
+  blink_mode = 1;
+  enableWDTInterrupts();
 
+  return 1;
 }
 void
 do_button4(char p2val)
